@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 
 from split import split_the_data
 
+import warnings
+warnings.filterwarnings("ignore")
+
 
 df = pd.read_csv("AB_NYC_2019.csv")
 
@@ -162,11 +165,15 @@ val_accuracy = train(X_train, y_train_binary, X_val, y_val_binary)
 # Question 5
 # feature elemination technique
 
-accuracy_features = {}
-def calculate_accuracy_by_removing_featurs(clf, val_accuracy, X_train, y_train_binary, X_val, y_val_binary):
-    for features in list(X_train.columns):
-        X_train_dict = X_train.drop(features, axis=1).to_dict("records")
-        X_val_dict = X_val.drop(features, axis=1).to_dict("records")
+def calculate_accuracy_by_removing_features(clf,features, val_accuracy, X_train, y_train_binary, X_val, y_val_binary):
+    accuracy_features = {}
+    features.remove("price")
+    for feature in list(X_train.columns):
+        selected_feature = features.copy()
+        selected_feature.remove(feature)
+        # print(selected_feature)
+        X_train_dict = X_train[selected_feature].to_dict("records")
+        X_val_dict = X_val[selected_feature].to_dict("records")
 
 
         # fit and transform to dict
@@ -184,10 +191,13 @@ def calculate_accuracy_by_removing_featurs(clf, val_accuracy, X_train, y_train_b
 
         # calculate difference
         difference = val_accuracy - accuracy_without_feature
-        accuracy_features[f"Without {features}"] = round(difference , 5)
+        accuracy_features[f"Without {feature}"] = round(difference , 5)
+        print(f"without {feature}")
+        print(accuracy_without_feature)
 
+    return accuracy_features
 
-# calculate_accuracy_by_removing_featurs(model(), val_accuracy, X_train, y_train_binary, X_val, y_val_binary)
+# accuracy_features = calculate_accuracy_by_removing_features(model(),features, val_accuracy, X_train, y_train_binary, X_val, y_val_binary)
 
 # print(accuracy_features)
 
@@ -214,8 +224,7 @@ y_val_log = y_val.map(apply_log)
 # print(y_train_log, y_test_log, y_val_log)
 
 
-alpha = [0, 0.01, 0.1, 1, 10]
-rmse_alpha = {}
+
 
 def rmse(y_test, y_pred):
     se = (y_test - y_pred) ** 2
@@ -225,26 +234,29 @@ def rmse(y_test, y_pred):
 from sklearn.metrics import r2_score
 
 def ridge_train(X_train, y_train_log, X_val, y_val_log, alpha_list):
+
+    alpha_list = [0, 0.01, 0.1, 1, 10]
+    rmse_alpha = {}
     X_train = X_train.to_dict("records")
     X_val = X_val.to_dict("records")
 
     dv = DictVectorizer(sparse=False)
-    one_hot_train = dv.fit_transform(X_train)
+    X_train = dv.fit_transform(X_train)
 
-    one_hot_val = dv.transform(X_val)
+    X_val = dv.transform(X_val)
 
     for alpha in alpha_list:
         reg = Ridge(alpha = alpha)
-        reg.fit(one_hot_train, y_train_log)
+        reg.fit(X_train, y_train_log)
 
-        y_pred = reg.predict(one_hot_val)
+        y_pred = reg.predict(X_val)
 
-        root_mean_squared_score = rmse(y_val, y_pred)
+        root_mean_squared_score = rmse(y_val_log, y_pred)
         rmse_alpha[f"Alpha: {alpha}"] = root_mean_squared_score
 
 
-ridge_train(X_train, y_train_log, X_val, y_val_log, alpha)
+# ridge_train(X_train, y_train_log, X_val, y_val_log, alpha)
 # print(rmse_alpha)
 
-#Answer alpha : 0.01 -> 268.914
+#Answer alpha : 0.0, 0.01 -> 0.497
 
