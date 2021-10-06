@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+jinja2
+aiofiles
+scikit-learn
+numpy
+python-multipart
