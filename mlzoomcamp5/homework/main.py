@@ -1,12 +1,16 @@
 import pickle
 
-import uvicorn
+# import uvicorn
 
 from fastapi import FastAPI
 from pydantic import BaseModel
 
 
-model_file = "model1.bin"
+vanilla = False
+if vanilla:
+    model_file = "model1.bin"
+else: 
+    model_file = "model2.bin"
 dv_file = "dv.bin"
 
 def open_file(model_file, dv_file):
@@ -43,6 +47,9 @@ def predict_model(customer: Customer):
     }
 
 
+def run(vanilla):
+    if vanilla:
+        uvicorn.run(app, host = "0.0.0.0", port=8000)
 
-if __name__ == "__main__":
-    uvicorn.run(app, host = "0.0.0.0", port=5000)
+run(vanilla)
+

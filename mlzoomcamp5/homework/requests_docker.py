@@ -11,6 +11,6 @@ customer = {
 }
 
 post_sequence = requests.post(url, json=customer).json()
-# print(post_sequence)
+print(post_sequence)
 # answer -> 0.3294
 
