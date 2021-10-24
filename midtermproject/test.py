@@ -1,17 +1,17 @@
-
-
 import requests
 
-port= 2000
+port = 2000
 
 url = f"http://localhost:{port}/predict/"
 
 text = "फिल्म ‘इभन होयन आइ फल’ मा बेचविखनमा परेका महिला र ‘सर्कस काठमाडौं’को कथा समेटिएको छ। फिल्मलाई स्काई नेयल र केट मेक्लारनाेनले निर्देशन गरेका हुन्"
 
+
 def text_example(text):
     return {
-            "params" : text
-            }
+        "params": text
+    }
+
 
 example = text_example(text)
 prediction = requests.post(url, json=example).json()
