@@ -86,5 +86,42 @@ The steps are mentioned below:
 
 
 
+# Installing Dependencies
+
+You can find requirements.txt file in the directory.
+You can use conda or pipenv to create virtual environment to install required library locally.
+
+### Using Conda
+
+Install Conda [windows]
+	- follow this link -> https://docs.conda.io/projects/conda/en/latest/user-guide/install/download.html
+
+Install Conda [linux]
+	- follow this link -> https://docs.anaconda.com/anaconda/install/linux/
+
+
+**creating a new conda env using our requirements.txt file**
+
+- ``conda create --name <env_name> --file requirements.txt``
+
+**activate the environment**
+
+- ``conda activate <env_name>``
+
+**deactivate the environment**
+- ``conda deactivate``
+
+
+### Using pipenv
+
+1. Install pipenv
+	- pip install pipenv
+2. run pipenv by typing ``pipenv shell`` in your command promt or terminal. It will create a new virtual environment in the current directory.
+
+3. Install the library using pip.
+	- pip install -r requirements.txt
+
+4. To exit type ``exit`` in terminal.
+
 
 
